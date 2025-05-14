@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+sqlmodel
+passlib[bcrypt]
+python-dotenv
+pydantic
+langchain_cohere
+langchain_core
+
