@@ -4,63 +4,69 @@
 //
 //  Created by Juan Pablo Orihuela Araiza on 12/05/25.
 //
+//
 
 import SwiftUI
 
-struct Crop: Identifiable {
-    let id = UUID()
-    let name: String
-    let icon: String
-    let progress: String
-}
-
 struct MyCropsView: View {
-    let crops = [
-        Crop(name: "Zanahoria", icon: "🥕", progress: "Riego pendiente"),
-        Crop(name: "Lechuga", icon: "🥬", progress: "Listo para cosechar"),
-    ]
-    
+    @State private var showChatbot = false
+    @State private var showDetector = false
+
     var body: some View {
         NavigationView {
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 20) {
                 Text("Mis Cultivos")
                     .font(.largeTitle.bold())
-                    .padding(.top)
                     .foregroundColor(Color("TextBlack"))
-                
-                ScrollView {
-                    VStack(spacing: 20) {
-                        ForEach(crops) { crop in
-                            HStack {
-                                Text(crop.icon)
-                                    .font(.largeTitle)
-                                
-                                VStack(alignment: .leading) {
-                                    Text(crop.name)
-                                        .font(.title2.bold())
-                                        .foregroundColor(Color("TextBlack"))
-                                    
-                                    Text(crop.progress)
-                                        .font(.subheadline)
-                                        .foregroundColor(.gray)
-                                }
-                                
-                                Spacer()
-                            }
-                            .padding()
-                            .background(Color("SoftWhite"))
-                            .cornerRadius(16)
-                            .shadow(color: .gray.opacity(0.2), radius: 5, x: 0, y: 2)
-                        }
-                    }
+                    .padding(.top)
                     .padding(.horizontal)
+
+            
+                CarouselStyleView()
+
+                VStack(spacing: 16) {
+                   
+                    NavigationLink(destination: PhotoAnalyzerView()) {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Revisa la salud de tus cultivos")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                            Text("Toma una foto o sube una imagen para detectar plagas o enfermedades")
+                                .font(.subheadline)
+                                .foregroundColor(.white.opacity(0.8))
+                        }
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color("PrimaryGreen"))
+                        .cornerRadius(20)
+                        .shadow(radius: 4)
+                    }
+
+              
+                    Button(action: {
+                        showChatbot = true
+                    }) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "message.circle.fill")
+                                .font(.title)
+                            Text("Abrir asistente")
+                                .font(.headline)
+                        }
+                        .padding()
+                        .foregroundColor(.white)
+                        .background(Color.blue)
+                        .cornerRadius(20)
+                    }
                 }
-                
+                .padding(.horizontal)
+
                 Spacer()
             }
-            .padding(.horizontal)
-            .background(Color("YellowBackground"))
+            .background(Color("YellowBackground").ignoresSafeArea())
             .navigationBarTitleDisplayMode(.inline)
+            .sheet(isPresented: $showChatbot) {
+                ChatView()
+            }
         }
     }
 }

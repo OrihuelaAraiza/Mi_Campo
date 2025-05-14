@@ -5,32 +5,43 @@
 //  Created by Juan Pablo Orihuela Araiza on 12/05/25.
 //
 
-import Foundation
 import CoreLocation
+import SwiftUI
 
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private let manager = CLLocationManager()
-    
+
     @Published var userLocation: CLLocation?
-    @Published var permissionGranted = false
+    @Published var permissionGranted: Bool = false
 
     override init() {
         super.init()
         manager.delegate = self
+        checkPermission()
     }
 
     func requestPermission() {
         manager.requestWhenInUseAuthorization()
     }
 
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        switch manager.authorizationStatus {
+    func checkPermission() {
+        let status = manager.authorizationStatus
+        switch status {
         case .authorizedWhenInUse, .authorizedAlways:
             permissionGranted = true
-            self.manager.requestLocation()
+            manager.requestLocation()
         default:
             permissionGranted = false
         }
+    }
+
+    func reset() {
+        permissionGranted = false
+        userLocation = nil
+    }
+
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        checkPermission()
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -38,6 +49,6 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("Error de localización:", error.localizedDescription)
+        print("Ubicación error: \(error.localizedDescription)")
     }
 }

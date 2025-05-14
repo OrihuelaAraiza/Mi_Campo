@@ -18,30 +18,25 @@ struct WelcomeView: View {
     @State private var role = "Comerciante"
     @State private var navigate = false
 
-    @StateObject var locationManager = LocationManager()
+    @State private var locationManagerID = UUID() // 👈 esto reinicia el objeto
+    @StateObject private var locationManager = LocationManager()
 
     var body: some View {
         VStack(spacing: 16) {
-            
             VStack(spacing: 8) {
                 Image("splashLogo")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 100)
-
                 Text("¡Bienvenido a Mi Campo!")
                     .font(.system(size: 28, weight: .bold, design: .rounded))
                     .foregroundColor(Color("TextBlack"))
             }
             .padding(.top)
 
-         
             CustomInputField(icon: "🧑‍🌾", placeholder: "Nombre", text: $name)
-
-       
             CustomInputField(icon: "📞", placeholder: "Teléfono", text: $phone, isPhone: true)
 
-          
             Button(action: {
                 locationManager.requestPermission()
             }) {
@@ -58,7 +53,6 @@ struct WelcomeView: View {
             }
             .padding(.horizontal)
 
-          
             Text("¿Qué eres?")
                 .font(.headline)
                 .foregroundColor(Color("TextBlack"))
@@ -70,7 +64,6 @@ struct WelcomeView: View {
             .pickerStyle(SegmentedPickerStyle())
             .padding(.horizontal)
 
-            
             Button(action: {
                 hasLaunchedBefore = true
                 userRole = role
@@ -87,7 +80,7 @@ struct WelcomeView: View {
                     .cornerRadius(12)
             }
             .padding(.horizontal)
-             .disabled(!locationManager.permissionGranted) // puedes activar si lo deseas
+            .disabled(!locationManager.permissionGranted)
 
             Spacer()
         }
@@ -96,10 +89,9 @@ struct WelcomeView: View {
         .fullScreenCover(isPresented: $navigate) {
             MainTabView()
         }
+        .id(locationManagerID) 
     }
 }
-
-
 struct CustomInputField: View {
     var icon: String
     var placeholder: String

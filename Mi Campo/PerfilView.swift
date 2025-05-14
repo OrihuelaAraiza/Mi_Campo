@@ -1,22 +1,4 @@
-//
-//  PerfilView.swift
-//  Mi Campo
-//
-//  Created by Juan Pablo Orihuela Araiza on 12/05/25.
-//
-
 import SwiftUI
-
-struct Cosecha: Identifiable {
-    let id = UUID()
-    var cultivo: String
-    var fechaSiembra: String
-    var fechaCosecha: String
-    var cantidad: Int
-    var ganancia: Double
-    var costo: Double
-    var problemas: [String]
-}
 
 struct PerfilView: View {
     @ObservedObject var viewModel: CultivoViewModel
@@ -28,6 +10,8 @@ struct PerfilView: View {
 
     @State private var cosechas: [Cosecha] = []
     @State private var showForm = false
+
+    let cosechaKey = "cosechasGuardadas"
 
     var body: some View {
         NavigationView {
@@ -42,7 +26,6 @@ struct PerfilView: View {
                         Text("📱 Teléfono: \(phone)")
                         Text("💼 Rol: \(role)")
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
                     .padding()
                     .background(Color.white.opacity(0.9))
                     .cornerRadius(12)
@@ -73,6 +56,7 @@ struct PerfilView: View {
                     Button(action: {
                         viewModel.borrarTodo()
                         onLogout()
+                        clearCosechas()
                         dismiss()
                     }) {
                         Text("Cerrar sesión")
@@ -87,14 +71,34 @@ struct PerfilView: View {
                     .padding(.bottom)
                 }
             }
-            .background(Color("YellowBackground").ignoresSafeArea())
+            .onAppear(perform: cargarCosechas)
             .sheet(isPresented: $showForm) {
                 AgregarCosechaView { nueva in
                     cosechas.append(nueva)
+                    guardarCosechas()
                     showForm = false
                 }
             }
+            .background(Color("YellowBackground").ignoresSafeArea())
             .navigationBarItems(trailing: Button("Cerrar") { dismiss() })
         }
+    }
+
+    func guardarCosechas() {
+        if let encoded = try? JSONEncoder().encode(cosechas) {
+            UserDefaults.standard.set(encoded, forKey: cosechaKey)
+        }
+    }
+
+    func cargarCosechas() {
+        if let data = UserDefaults.standard.data(forKey: cosechaKey),
+           let decoded = try? JSONDecoder().decode([Cosecha].self, from: data) {
+            cosechas = decoded
+        }
+    }
+
+    func clearCosechas() {
+        UserDefaults.standard.removeObject(forKey: cosechaKey)
+        cosechas = []
     }
 }

@@ -4,7 +4,6 @@
 //
 //  Created by Juan Pablo Orihuela Araiza on 12/05/25.
 //
-
 import SwiftUI
 
 struct MainTabView: View {
@@ -15,12 +14,13 @@ struct MainTabView: View {
         NavigationView {
             ZStack(alignment: .bottom) {
                 selectedContentView()
+                    .ignoresSafeArea(.keyboard)
 
                 CustomTabBar(selected: $selectedTab)
-                    .padding(.bottom, 8)
+                    .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: -2)
+                    .ignoresSafeArea(edges: .bottom) // 👈 esto asegura que se vaya al fondo
             }
             .background(Color("YellowBackground").ignoresSafeArea())
-            .ignoresSafeArea(.keyboard)
         }
     }
 

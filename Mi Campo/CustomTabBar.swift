@@ -11,47 +11,55 @@ struct CustomTabBar: View {
     @Binding var selected: String
 
     var body: some View {
-        HStack {
-            Spacer()
+        VStack(spacing: 0) {
+           
+            HStack {
+                Spacer()
 
-            Button(action: {
-                selected = "Inicio"
-            }) {
-                VStack {
-                    Image(systemName: "house.fill")
-                    Text("Inicio")
+                Button(action: {
+                    selected = "Inicio"
+                }) {
+                    VStack {
+                        Image(systemName: "house.fill")
+                        Text("Inicio")
+                            .font(.caption)
+                    }
+                    .foregroundColor(selected == "Inicio" ? Color("PrimaryGreen") : .gray)
                 }
-                .foregroundColor(selected == "Inicio" ? Color("PrimaryGreen") : .gray)
-            }
 
-            Spacer()
+                Spacer()
 
-            Button(action: {
-                selected = "Mis cultivos"
-            }) {
-                VStack {
-                    Image(systemName: "leaf.fill")
-                    Text("Mis cultivos")
+                Button(action: {
+                    selected = "Mis cultivos"
+                }) {
+                    VStack {
+                        Image(systemName: "leaf.fill")
+                        Text("Mis cultivos")
+                            .font(.caption)
+                    }
+                    .foregroundColor(selected == "Mis cultivos" ? Color("PrimaryGreen") : .gray)
                 }
-                .foregroundColor(selected == "Mis cultivos" ? Color("PrimaryGreen") : .gray)
-            }
 
-            Spacer()
+                Spacer()
 
-            Button(action: {
-                selected = "Comunidad"
-            }) {
-                VStack {
-                    Image(systemName: "bubble.left.and.bubble.right.fill")
-                    Text("Comunidad")
+                Button(action: {
+                    selected = "Comunidad"
+                }) {
+                    VStack {
+                        Image(systemName: "bubble.left.and.bubble.right.fill")
+                        Text("Comunidad")
+                            .font(.caption)
+                    }
+                    .foregroundColor(selected == "Comunidad" ? Color("PrimaryGreen") : .gray)
                 }
-                .foregroundColor(selected == "Comunidad" ? Color("PrimaryGreen") : .gray)
-            }
 
-            Spacer()
+                Spacer()
+            }
+            .padding(.top, 8)
+            .padding(.bottom, 12)
+            .background(Color.white)
         }
-        .padding()
-        .background(Color.white.opacity(0.95))
-        .cornerRadius(20)
+        .frame(maxWidth: .infinity)
+        .ignoresSafeArea(edges: .bottom) // ← Muy importante para bajar la barra hasta el borde
     }
 }
