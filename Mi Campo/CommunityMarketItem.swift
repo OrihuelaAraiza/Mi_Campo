@@ -83,7 +83,7 @@ struct ContactoCard: View {
             Text("📦 Disponible: \(cantidadDisponible)")
 
             HStack(spacing: 16) {
-                // Botón copiar
+                
                 Button(action: {
                     UIPasteboard.general.string = telefono
                 }) {
@@ -99,7 +99,7 @@ struct ContactoCard: View {
                     .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 2)
                 }
 
-                // Botón llamar
+         
                 Button(action: {
                     if let url = URL(string: "tel://\(telefono.filter { $0.isNumber })") {
                         UIApplication.shared.open(url)
